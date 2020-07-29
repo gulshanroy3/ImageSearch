@@ -50,46 +50,50 @@ class Home extends Component {
             query: '',
             apicalling: false
         }
-        this.getImage = debounce(300, this.getImage);
+        this.getImage = debounce(500, this.getImage);
     }
     handleSearch = (value) => {
-
+        console.log(value === '')
         if (value === '') {
-            this.setState({ imageData: {}, page: 1 })
+            this.setState({ imageData: {}, page: 1, query: "" })
         }
         else {
             //call API
-            this.getImage(value)
+            this.setState({ query: value })
+            this.getImage(value, false)
         }
     }
-    getImage = (value) => {
-        const { page, imageData } = this.state
-        let _imageData = JSON.parse(JSON.stringify(imageData))
-        this.setState({
-            apicalling: true
-        })
-        axios.get(`https://api.unsplash.com/search/photos/?client_id=ZZLZpBJyPtjmtUjZ2mqzRXZj70PV5-aupd2wu29_eyI&query=${value}&per_page=9&page=${page}`).then(res => {
-            if (_imageData && _imageData.results && _imageData.results.length !== 0) {
+    getImage = (value, viewMore) => {
+        const { query } = this.state
+        if (!(query === '')) {
+            const { page, imageData } = this.state
+            let _imageData = JSON.parse(JSON.stringify(imageData))
+            this.setState({
+                apicalling: true
+            })
+            axios.get(`https://api.unsplash.com/search/photos/?client_id=ZZLZpBJyPtjmtUjZ2mqzRXZj70PV5-aupd2wu29_eyI&query=${value}&per_page=9&page=${viewMore ? page + 1 : 1}`).then(res => {
+                if (_imageData && _imageData.results && _imageData.results.length !== 0) {
 
-                let _re = [..._imageData.results, ...res.data.results]
-                _imageData.results = _re
-            }
-            else {
-                _imageData = res.data
-            }
-            this.setState({
-                imageData: _imageData,
-                page: res.data.results.length > 0 ? page + 1 : 1,
-                query: value,
-                apicalling: false
+                    let _re = [..._imageData.results, ...res.data.results]
+                    _imageData.results = _re
+                }
+                else {
+                    _imageData = res.data
+                }
+                this.setState({
+                    imageData: _imageData,
+                    page: viewMore ? page + 1 : 1,
+                    query: value,
+                    apicalling: false
+                })
+                console.log(res)
+            }).catch((err) => {
+                console.log(err)
+                this.setState({
+                    apicalling: false
+                })
             })
-            console.log(res)
-        }).catch((err) => {
-            console.log(err)
-            this.setState({
-                apicalling: false
-            })
-        })
+        }
     }
     render() {
         const { imageData, query, apicalling } = this.state;
@@ -105,7 +109,7 @@ class Home extends Component {
                     </div>
                     {
                         imageData && imageData.results && imageData.results.length !== 0 && <div className='load-more-button-wrapper'>
-                            <Button onClick={() => this.getImage(query)} isLoader={apicalling} disable={imageData.total <= imageData.results.length || apicalling}>
+                            <Button onClick={() => this.getImage(query, true)} isLoader={apicalling} disable={imageData.total <= imageData.results.length || apicalling}>
                                 <span>Load more</span>
                             </Button>
                         </div>
@@ -124,6 +128,7 @@ function RenderImages(props) {
     useEffect(() => {
         setimageDataLocal(imageData)
     }, [imageData])
+
     return (
         imageDataLocal && imageDataLocal.results && imageDataLocal.results.map(eachData => {
             return (
