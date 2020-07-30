@@ -73,9 +73,13 @@ class Home extends Component {
             })
             axios.get(`https://api.unsplash.com/search/photos/?client_id=ZZLZpBJyPtjmtUjZ2mqzRXZj70PV5-aupd2wu29_eyI&query=${value}&per_page=9&page=${viewMore ? page + 1 : 1}`).then(res => {
                 if (_imageData && _imageData.results && _imageData.results.length !== 0) {
-
-                    let _re = [..._imageData.results, ...res.data.results]
-                    _imageData.results = _re
+                    if (viewMore) {
+                        let _re = [..._imageData.results, ...res.data.results]
+                        _imageData.results = _re
+                    }
+                    else {
+                        _imageData = res.data
+                    }
                 }
                 else {
                     _imageData = res.data
