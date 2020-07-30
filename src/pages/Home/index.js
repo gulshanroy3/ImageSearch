@@ -111,7 +111,7 @@ class Home extends Component {
         const { imageData, query, apicalling, searching } = this.state;
         return (
             <Wrapper>
-                <div className='title'>Razorthink Assigment</div>
+                <div className='title'>Razorthink Assignment</div>
                 <div className='option-wraapper'>
                     <SearchBar placeHolderText='Search for Images here...' handleSearch={this.handleSearch} />
                     <div class='main-image-wrapper'>
