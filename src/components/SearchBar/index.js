@@ -2,12 +2,10 @@ import React, { useState } from 'react';
 import './index.scss';
 import { getImagePath } from "../../util/common"
 
-let preventSearchUpdate = false;
 function SearchBar(props) {
 	const { placeHolderText, handleSearch } = props;
 
 	const handleQueryUpdate = (e) => {
-		preventSearchUpdate = false;
 		handleSearch && handleSearch(e.target.value);
 	};
 

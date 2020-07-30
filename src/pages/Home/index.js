@@ -2,7 +2,7 @@ import React, { Component, useState, useEffect } from 'react'
 import Styled from "styled-components"
 import SearchBar from "../../components/SearchBar"
 import Image from "../../components/Image"
-import { defaultResponse } from "./util"
+import Loader from "../../components/Loader"
 import axios from "axios"
 import Button from '../../components/Button'
 import { debounce } from 'throttle-debounce';
@@ -48,7 +48,8 @@ class Home extends Component {
             imageData: {},
             page: 1,
             query: '',
-            apicalling: false
+            apicalling: false,
+            searching: false
         }
         this.getImage = debounce(500, this.getImage);
     }
@@ -71,6 +72,11 @@ class Home extends Component {
             this.setState({
                 apicalling: true
             })
+            if (!viewMore) {
+                this.setState({
+                    searching: true
+                })
+            }
             axios.get(`https://api.unsplash.com/search/photos/?client_id=ZZLZpBJyPtjmtUjZ2mqzRXZj70PV5-aupd2wu29_eyI&query=${value}&per_page=9&page=${viewMore ? page + 1 : 1}`).then(res => {
                 if (_imageData && _imageData.results && _imageData.results.length !== 0) {
                     if (viewMore) {
@@ -88,31 +94,33 @@ class Home extends Component {
                     imageData: _imageData,
                     page: viewMore ? page + 1 : 1,
                     query: value,
-                    apicalling: false
+                    apicalling: false,
+                    searching: false
                 })
                 console.log(res)
             }).catch((err) => {
                 console.log(err)
                 this.setState({
-                    apicalling: false
+                    apicalling: false,
+                    searching: false
                 })
             })
         }
     }
     render() {
-        const { imageData, query, apicalling } = this.state;
+        const { imageData, query, apicalling, searching } = this.state;
         return (
             <Wrapper>
                 <div className='title'>Razorthink Assigment</div>
                 <div className='option-wraapper'>
-                    <SearchBar placeHolderText='Search for Images here' handleSearch={this.handleSearch} />
+                    <SearchBar placeHolderText='Search for Images here...' handleSearch={this.handleSearch} />
                     <div class='main-image-wrapper'>
                         {
-                            imageData && imageData.results ? imageData.results.length === 0 ? <div>no image found</div> : <RenderImages imageData={imageData} /> : null
+                            searching ? <Loader /> : imageData && imageData.results ? imageData.results.length === 0 ? <div>No image found...</div> : <RenderImages imageData={imageData} /> : null
                         }
                     </div>
                     {
-                        imageData && imageData.results && imageData.results.length !== 0 && <div className='load-more-button-wrapper'>
+                        searching ? null : imageData && imageData.results && imageData.results.length !== 0 && <div className='load-more-button-wrapper'>
                             <Button onClick={() => this.getImage(query, true)} isLoader={apicalling} disable={imageData.total <= imageData.results.length || apicalling}>
                                 <span>Load more</span>
                             </Button>
