@@ -121,7 +121,7 @@ class Home extends Component {
                     </div>
                     {
                         searching ? null : imageData && imageData.results && imageData.results.length !== 0 && <div className='load-more-button-wrapper'>
-                            <Button onClick={() => this.getImage(query, true)} isLoader={apicalling} disable={imageData.total <= imageData.results.length || apicalling}>
+                            <Button onClick={() => this.getImage(query, true)} isLoader={apicalling} disabled={imageData.total <= imageData.results.length || apicalling}>
                                 <span>Load more</span>
                             </Button>
                         </div>

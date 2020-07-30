@@ -4,11 +4,15 @@ import styled from 'styled-components';
 import { createTheme } from './theme';
 import Loader from "../Loader"
 import "./index.scss"
-const SIZES = {
-	SMALL: 'small',
-	MEDIUM: 'medium',
-	LARGE: 'large',
-};
+const disabledTheme = {
+	color: 'rgba(0,0,0,0.25)',
+	cursor: 'not-allowed',
+	background: '#f5f5f5',
+	borderColor: '#d9d9d9',
+	hover: {
+		background: '#f5f5f5',
+	},
+}
 
 const StyledButton = styled.button`
 	${(props) => props.theme}
@@ -27,16 +31,16 @@ function Button(props) {
 		disabled,
 		children,
 	} = props;
-	let Theme = createTheme(theme);
+	let Theme = createTheme(disabled ? disabledTheme : theme);
 
 	return (
-		<StyledButton {...props} theme={Theme} onClick={!disabled ? () => onClick() : () => console.log("no")}>
+		<StyledButton {...props} theme={Theme} onClick={!disabled ? () => onClick() : isLoader ? () => console.log("no") : () => onClick()}>
 			{isLoader ? <div className='spinner'></div> : children}
 		</StyledButton>
 	);
 }
 
-Button.SIZES = SIZES;
+
 Button.defaultProps = {
 	onClick: () => console.log("log"),
 	isLoader: false,
