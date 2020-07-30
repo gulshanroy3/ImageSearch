@@ -23,7 +23,6 @@ function Button(props) {
 	const {
 		theme = {},
 		onClick,
-		loader,
 		isLoader,
 		disabled,
 		children,
@@ -40,7 +39,6 @@ function Button(props) {
 Button.SIZES = SIZES;
 Button.defaultProps = {
 	onClick: () => console.log("log"),
-	loader: <Loader />,
 	isLoader: false,
 	disabled: false,
 };

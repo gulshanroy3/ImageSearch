@@ -31,7 +31,7 @@ export const Wrapper = styled.div`
             padding: 24px;
             display: flex;
               .user-details{
-                margin-left:24px;
+                margin: auto 24px;
                 .name{
                     font-size:16px;
                     font-weight:500;
@@ -39,6 +39,7 @@ export const Wrapper = styled.div`
                    .username{
                     font-size:12px;
                     color:grey;
+                    text-align: left;
                    }
               }
           
