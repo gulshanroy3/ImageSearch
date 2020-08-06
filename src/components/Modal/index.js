@@ -34,7 +34,8 @@ const ModalWrapper = Styled.div`
     position: absolute;
     right: 0%;
     z-index: 100;
-    top: 0%;
+	top: 0%;
+	cursor: pointer;
 }
 `;
 function Modal(props) {

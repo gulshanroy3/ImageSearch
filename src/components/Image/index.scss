@@ -1,0 +1,37 @@
+.profile{
+    padding: 24px;
+    display: flex;
+      .user-details{
+        margin: auto 24px;
+        .name{
+            font-size:16px;
+            font-weight:500;
+           }
+           .username{
+            font-size:12px;
+            color:grey;
+            text-align: left;
+           }
+      }
+  
+  }
+  .credit-image{
+    border-radius:32%;
+    width: 48px;
+    height: 48px;
+}
+.big-image-wrapper{
+    padding: 24px;
+    .full-image{
+        width:800px;
+        height:500px;
+    }
+}
+.button-wrapper{
+    padding:24px;
+    display:flex;
+    justify-content:center;
+    a{
+        text-decoration:none;
+    }
+}

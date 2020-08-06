@@ -3,9 +3,11 @@ import Styled from "styled-components"
 import SearchBar from "../../components/SearchBar"
 import Image from "../../components/Image"
 import Loader from "../../components/Loader"
+import { Route } from "react-router-dom";
 import axios from "axios"
 import Button from '../../components/Button'
 import { debounce } from 'throttle-debounce';
+import FullImage from "../../components/Image/fullImage"
 const Wrapper = Styled.div`
 width: 100%;
 .title{
@@ -114,9 +116,11 @@ class Home extends Component {
                 <div className='title'>Razorthink Assignment</div>
                 <div className='option-wraapper'>
                     <SearchBar placeHolderText='Search for Images here...' handleSearch={this.handleSearch} />
-                    <div class='main-image-wrapper'>
+                    <div className='main-image-wrapper'>
                         {
-                            searching ? <Loader /> : imageData && imageData.results ? imageData.results.length === 0 ? <div>No image found...</div> : <RenderImages imageData={imageData} /> : null
+                            
+                            searching ? <Loader /> : imageData && imageData.results ? imageData.results.length === 0 ? <div>No image found...</div> : <RenderImages {...this.props} imageData={imageData} /> : null
+                            
                         }
                     </div>
                     {
@@ -126,6 +130,7 @@ class Home extends Component {
                             </Button>
                         </div>
                     }
+                    
                 </div>
             </Wrapper>
         )
@@ -135,16 +140,35 @@ class Home extends Component {
 export default (Home)
 
 function RenderImages(props) {
-    const { imageData } = props
+    const { imageData, ...rest } = props
+   
     const [imageDataLocal, setimageDataLocal] = useState(imageData)
     useEffect(() => {
+        console.log(props)
         setimageDataLocal(imageData)
     }, [imageData])
 
     return (
-        imageDataLocal && imageDataLocal.results && imageDataLocal.results.map(eachData => {
+        imageDataLocal && imageDataLocal.results && imageDataLocal.results.map((eachData,key) => {
             return (
-                <Image data={eachData} />
+              <>
+               <div onClick={()=>props.history.push(`${props.match.url}/full-image/${eachData.id}`)}>
+                <Image data={eachData} {...rest} unique={key} />
+                </div>
+                <Route
+                path={`${props.match.url}/full-image/${eachData.id}`}
+                exact={true}
+               component={()=>{
+                  return(
+                   
+                    <FullImage data={eachData} {...rest}/>
+               
+                  )
+               }}
+              >
+                 
+                  </Route>
+              </>
             )
         })
     )

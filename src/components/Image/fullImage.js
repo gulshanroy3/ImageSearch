@@ -1,29 +1,58 @@
 import React from 'react'
-import { Wrapper } from "./style"
-
- function Image(props) {
-    const{unique}=props
-    const { urls = {}, links = {}, user = {} } = props.data
-    const { small, regular } = urls
+import PropTypes from 'prop-types'
+import Modal from "../Modal/index"
+import Button from "../Button"
+import "./index.scss"
+function FullImage(props) {
+    const { urls = {}, links = {}, user = {},id='image' } = props.data
+    const { regular } = urls
     const { download } = links
     const { profile_image, username, name } = user
-    
+    const onDownload=(download,id)=>{
+        fetch(download).then(res=>{
+            console.log(res)
+            res.blob().then(re=>{
+                var element = document.createElement("a");
+                var file = new Blob(
+                  [
+                   re
+                  ],
+                  { type: "image/*" }
+                );
+                element.href = URL.createObjectURL(file);
+                element.download = `${id}.jpg`;
+                element.click();
+            })
+           
+        })
+        
+    }
     return (
-        <Wrapper className='image-wrapper'>
-            <img src={small} alt='' className='image' />
-           <div>
-           <div class="bottom-left">
-                <img src={profile_image.medium} className='credit-image' alt='' />
-                <div className='credit'>Image by <span className='name'>{name}</span></div>
+        <Modal onClose={()=>{
+            props.history.push(props.match.url)
+        }} >
+        <div className="profile">
+            <img src={profile_image.medium} className='credit-image' alt='' />
+            <div className='user-details'>
+                <div className='name'>{name}</div>
+                <div className='username'>@{username}</div>
             </div>
-           </div>
-             
-        </Wrapper >
-
+        </div>
+        <div className='big-image-wrapper'>
+            <img src={regular} alt='' className='full-image' />
+        </div>
+        <div className='button-wrapper'>
+           
+                <Button  onClick={()=>onDownload(regular,id)}>
+                    <span>Download</span>
+                </Button>
+       
+        </div>
+    </Modal>
     )
 }
 
-Image.defaultProps = {
+FullImage.defaultProps = {
     data: {
         "id": "g2E2NQ5SWSU",
         "created_at": "2020-07-01T18:31:27-04:00",
@@ -138,4 +167,5 @@ Image.defaultProps = {
     }
 }
 
-export default (Image)
+export default FullImage
+
