@@ -11,7 +11,7 @@ function Routing() {
            routes.map((eachRoute,index)=>{
              return(
                 <eachRoute.layout>
-                <Route path="/home" component={eachRoute.component} key={index} />
+                <Route path={eachRoute.path} component={eachRoute.component} key={index} />
            </eachRoute.layout>
              )
            })
